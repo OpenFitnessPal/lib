@@ -1,0 +1,17 @@
+# - Config file for the MyLib package
+# It defines the following variables
+#  MYLIB_INCLUDE_DIRS - include directories for MyLib
+#  MYLIB_LIBRARIES    - libraries to link against
+#  MYLIB_EXECUTABLE   - the bar executable
+
+# Compute paths
+get_filename_component(OFPLIB_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set(OFPLIB_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+
+# Our library dependencies (contains definitions for IMPORTED targets)
+if(NOT TARGET OFPLib AND NOT OFPLib_BINARY_DIR)
+    include("${MYLIB_CMAKE_DIR}/OFPLibTargets.cmake")
+endif()
+
+# These are IMPORTED targets created by MyLibTargets.cmake
+set(OFPLIB_LIBRARIES OFP)
