@@ -9,7 +9,7 @@ static const QString BASE_URL = "https://www.myfitnesspal.com";
 
 OFPManager::OFPManager(QObject *parent)
     : QObject{parent}
-    , m_manager(new QNetworkAccessManager)
+    , m_manager(new QNetworkAccessManager(this))
 {}
 
 void OFPManager::search(const QString &query) const

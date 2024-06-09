@@ -38,7 +38,16 @@ private:
 
     QList<ServingSize> m_servingSizes{};
 public:
+    /**
+     * @brief FoodItem Construct a food-item from a search JSON.
+     * @param obj The JSON object found from a search.
+     */
     FoodItem(const QJsonObject &obj);
+
+    /**
+     * @brief FoodItem Construct a food-item from an HTML page.
+     * @param html The HTML from the relevant page.
+     */
     FoodItem(const QString &html);
 
     double calories() const;
