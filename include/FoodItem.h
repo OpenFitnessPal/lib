@@ -50,6 +50,8 @@ public:
      */
     FoodItem(const QString &html);
 
+    FoodItem() = default;
+
     double calories() const;
 
     QString brand() const;

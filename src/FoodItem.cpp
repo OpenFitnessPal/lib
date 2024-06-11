@@ -192,22 +192,68 @@ FoodItem::FoodItem(const QString &html) {
     QJsonDocument doc = QJsonDocument::fromJson(split.toUtf8());
 
     // behind like 30 layers you can actually find the original json in the html
-    QJsonObject query = doc.object().value("props").toObject().value("pageProps").toObject().value("dehydratedState").toObject().value("queries").toArray().at(0).toObject();
+    QJsonObject dehydratedState = doc.object().value("props").toObject().value("pageProps").toObject().value("dehydratedState").toObject();
+    QJsonObject query = dehydratedState.value("queries").toArray().at(0).toObject();
 
     QJsonObject foodData = query.value("state").toObject().value("data").toObject().value("data").toObject().value("foodByObfuscatedId").toObject();
+    QJsonArray queryKey = query.value("queryKey").toArray();
 
-    // TODO: this uses a different format for some godforsaken reason
-    // so parse it
-  // "props": {
-  //   "pageProps": {
-  //     "dehydratedState": {
-  //       "mutations": [],
-  //       "queries": [
+    m_brand = foodData.value("brand").toString("Unknown");
+    m_name = foodData.value("description").toString("Unknown Food");
 
-  //         {
-  //           "state": {
-  //             "data": {
-  //               "data": {
-  //                 "foodByObfuscatedId": {
+    m_id = dehydratedState.value("foodID").toVariant().toString();
 
+    QList<ServingSize> sizes;
+
+    QJsonArray servings = foodData.value("servingSizes").toArray();
+
+    double defaultCalories = std::nan(0);
+
+    for (QJsonValueRef ref : servings) {
+        QJsonObject obj = ref.toObject();
+
+        double value = obj.value("value").toDouble();
+        QString unit = obj.value("unit").toString("serving");
+        double base = 1.0;
+
+        QJsonObject nutrition = obj.value("nutrition").toObject();
+        double cals = nutrition.value("energy").toObject().value("value").toDouble();
+        if (std::isnan(defaultCalories)) {
+            defaultCalories = cals;
+
+            auto getValue = [nutrition](const QString &field) -> double {
+                return nutrition.value(field).toDouble();
+            };
+
+            m_fat = getValue("fat");
+            m_satFat = getValue("saturatedFat");
+            m_monoFat = getValue("monounsaturatedFat");
+            m_polyFat = getValue("polyunsaturatedFat");
+            m_transFat = getValue("transFat");
+
+            m_carbs = getValue("carbs");
+            m_fiber = getValue("fiber");
+            m_sugar = getValue("sugar");
+            m_addedSugar = 0.0;
+
+            m_protein = getValue("protein");
+            m_cholesterol = getValue("cholesterol");
+
+            m_calcium = getValue("calcium");
+            m_iron = getValue("iron");
+            m_sodium = getValue("sodium");
+            m_potassium = getValue("potassium");
+
+            m_vitaminA = getValue("vitaminA");
+            m_vitaminC = getValue("vitaminC");
+            m_vitaminD = getValue("vitaminD");
+        } else {
+            base = cals / defaultCalories;
+        }
+
+        ServingSize size(base, unit, value);
+        sizes.append(size);
+    }
+
+    m_servingSizes = sizes;
 }
