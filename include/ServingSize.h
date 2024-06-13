@@ -20,6 +20,7 @@ public:
     void setBaseMultiplier(double newBaseMultiplier);
 
     QString unit() const;
+    QString baseUnit() const;
     void setUnit(const QString &newUnit);
 
     double defaultValue() const;

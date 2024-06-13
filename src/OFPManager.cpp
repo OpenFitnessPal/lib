@@ -19,10 +19,14 @@ void OFPManager::search(const QString &query) const
 
     QNetworkRequest req;
     req.setUrl(QUrl(BASE_URL + "/api/nutrition?query=" + newQuery));
+    req.setRawHeader("referer", QByteArray("https://www.myfitnesspal.com/nutrition-facts-calories/") + query.toUtf8());
+    req.setHeader(QNetworkRequest::KnownHeaders::UserAgentHeader, "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/6.7.1 Chrome/118.0.5993.220 Safari/537.36");
+    req.setRawHeader("accept", "application/json");
 
     QNetworkReply *reply = m_manager->get(req);
     QObject::connect(reply, &QNetworkReply::readyRead, this, [reply, this] {
         QByteArray data = reply->readAll();
+        qDebug() << data;
         QJsonDocument doc = QJsonDocument::fromJson(data);
 
         QJsonArray array = doc.object().value("items").toArray();

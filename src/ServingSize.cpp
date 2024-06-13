@@ -7,6 +7,11 @@ double ServingSize::baseMultiplier() const
 
 QString ServingSize::unit() const
 {
+    return QString::number(m_defaultValue) + " " + m_unit;
+}
+
+QString ServingSize::baseUnit() const
+{
     return m_unit;
 }
 
