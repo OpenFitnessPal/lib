@@ -52,6 +52,8 @@ public:
 
     FoodItem() = default;
 
+    QJsonObject toJson() const;
+
     double calories() const;
 
     QString brand() const;
@@ -84,6 +86,7 @@ public:
     double vitaminD() const;
 
     QList<ServingSize> servingSizes() const;
+    QString id() const;
 };
 
 #endif // FOODITEM_H

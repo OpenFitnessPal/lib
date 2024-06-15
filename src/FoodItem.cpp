@@ -130,6 +130,11 @@ QList<ServingSize> FoodItem::servingSizes() const
     return m_servingSizes;
 }
 
+QString FoodItem::id() const
+{
+    return m_id;
+}
+
 FoodItem::FoodItem(const QJsonObject &obj) {
     QJsonObject item = obj.value("item").toObject();
     if (item.empty()) {
@@ -184,6 +189,63 @@ FoodItem::FoodItem(const QJsonObject &obj) {
 
         m_servingSizes.append(size);
     }
+}
+
+QJsonObject FoodItem::toJson() const
+{
+    QJsonObject obj{};
+
+    obj.insert("brand_name", m_brand);
+    obj.insert("description", m_name);
+    obj.insert("id", m_id);
+
+    QJsonObject nutrition{};
+
+    auto setValue = [nutrition](const QString &field, double value) mutable {
+        nutrition.insert(field, value);
+    };
+
+    setValue("fat", m_fat);
+    setValue("saturated_fat", m_satFat);
+    setValue("monounsaturated_fat", m_monoFat);
+    setValue("polyunsaturated_fat", m_polyFat);
+    setValue("trans_fat", m_transFat);
+
+    setValue("carbohydrates", m_carbs);
+    setValue("fiber", m_fiber);
+    setValue("sugar", m_sugar);
+    setValue("added_sugars", m_addedSugar);
+
+    setValue("protein", m_protein);
+    setValue("cholesterol", m_cholesterol);
+
+    setValue("calcium", m_calcium);
+    setValue("iron", m_iron);
+    setValue("sodium", m_sodium);
+    setValue("potassium", m_potassium);
+
+    setValue("vitamin_a", m_vitaminA);
+    setValue("vitamin_c", m_vitaminC);
+    setValue("vitamin_d", m_vitaminD);
+
+    obj.insert("nutritional_contents", nutrition);
+
+    // Serving Sizes
+    QJsonArray servings{};
+
+    for (const ServingSize &size : m_servingSizes) {
+        QJsonObject serving{};
+
+        serving.insert("nutrition_multiplier", size.baseMultiplier());
+        serving.insert("unit", size.baseUnit());
+        serving.insert("value", size.defaultValue());
+
+        servings.append(serving);
+    }
+
+    obj.insert("serving_sizes", servings);
+
+    return obj;
 }
 
 FoodItem::FoodItem(const QString &html) {
