@@ -89,4 +89,6 @@ public:
     QString id() const;
 };
 
+bool operator==(const FoodItem &a, const FoodItem &b);
+
 #endif // FOODITEM_H

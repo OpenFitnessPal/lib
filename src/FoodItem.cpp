@@ -135,6 +135,11 @@ QString FoodItem::id() const
     return m_id;
 }
 
+bool operator==(const FoodItem &a, const FoodItem &b)
+{
+    return a.id() == b.id();
+}
+
 FoodItem::FoodItem(const QJsonObject &obj) {
     QJsonObject item = obj.value("item").toObject();
     if (item.empty()) {
@@ -201,7 +206,7 @@ QJsonObject FoodItem::toJson() const
 
     QJsonObject nutrition{};
 
-    auto setValue = [nutrition](const QString &field, double value) mutable {
+    auto setValue = [&nutrition](const QString &field, double value) mutable {
         nutrition.insert(field, value);
     };
 

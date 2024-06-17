@@ -26,7 +26,6 @@ void OFPManager::search(const QString &query) const
     QNetworkReply *reply = m_manager->get(req);
     QObject::connect(reply, &QNetworkReply::readyRead, this, [reply, this] {
         QByteArray data = reply->readAll();
-        qDebug() << data;
         QJsonDocument doc = QJsonDocument::fromJson(data);
 
         QJsonArray array = doc.object().value("items").toArray();
