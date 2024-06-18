@@ -5,7 +5,7 @@
 #include <QJsonArray>
 
 // TODO: constants
-static const QString BASE_URL = "https://www.myfitnesspal.com";
+static const QString BASE_URL = "https://search.swurl.xyz/";
 
 OFPManager::OFPManager(QObject *parent)
     : QObject{parent}
@@ -18,17 +18,20 @@ void OFPManager::search(const QString &query) const
     newQuery.replace(' ', '+');
 
     QNetworkRequest req;
-    req.setUrl(QUrl(BASE_URL + "/api/nutrition?query=" + newQuery));
-    req.setRawHeader("referer", QByteArray("https://www.myfitnesspal.com/nutrition-facts-calories/") + query.toUtf8());
-    req.setHeader(QNetworkRequest::KnownHeaders::UserAgentHeader, "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/6.7.1 Chrome/118.0.5993.220 Safari/537.36");
-    req.setRawHeader("accept", "application/json");
+    req.setUrl(QUrl(BASE_URL + newQuery));
 
     QNetworkReply *reply = m_manager->get(req);
     QObject::connect(reply, &QNetworkReply::readyRead, this, [reply, this] {
         QByteArray data = reply->readAll();
-        QJsonDocument doc = QJsonDocument::fromJson(data);
+        data.removeLast();
 
-        QJsonArray array = doc.object().value("items").toArray();
+        QJsonParseError e;
+        QJsonDocument doc = QJsonDocument::fromJson(data, &e);
+        qDebug() << e.errorString();
+
+        QJsonArray array = doc.array();
+
+        qDebug() << doc;
 
         QList<FoodItem> items{};
 
@@ -39,5 +42,9 @@ void OFPManager::search(const QString &query) const
         }
 
         emit searchComplete(items);
+    });
+
+    QObject::connect(reply, &QNetworkReply::errorOccurred, this, [reply, this](QNetworkReply::NetworkError e) {
+        qDebug() << e;
     });
 }

@@ -141,29 +141,22 @@ bool operator==(const FoodItem &a, const FoodItem &b)
 }
 
 FoodItem::FoodItem(const QJsonObject &obj) {
-    QJsonObject item = obj.value("item").toObject();
-    if (item.empty()) {
-        item = obj;
-    }
+    m_brand = obj.value("brand").toString("Unknown");
+    m_name = obj.value("name").toString("Unknown Food");
 
-    m_brand = item.value("brand_name").toString("Unknown");
-    m_name = item.value("description").toString("Unknown Food");
+    m_id = obj.value("id").toVariant().toString();
 
-    m_id = item.value("id").toVariant().toString();
-
-    QJsonObject nutrition = item.value("nutritional_contents").toObject();
-
-    auto getValue = [nutrition](const QString &field) -> double {
-        return nutrition.value(field).toDouble();
+    auto getValue = [obj](const QString &field) -> double {
+        return obj.value(field).toDouble();
     };
 
     m_fat = getValue("fat");
-    m_satFat = getValue("saturated_fat");
-    m_monoFat = getValue("monounsaturated_fat");
-    m_polyFat = getValue("polyunsaturated_fat");
-    m_transFat = getValue("trans_fat");
+    m_satFat = getValue("sat");
+    m_monoFat = getValue("mono");
+    m_polyFat = getValue("poly");
+    m_transFat = getValue("trans");
 
-    m_carbs = getValue("carbohydrates");
+    m_carbs = getValue("carbs");
     m_fiber = getValue("fiber");
     m_sugar = getValue("sugar");
     m_addedSugar = getValue("added_sugars");
@@ -176,17 +169,17 @@ FoodItem::FoodItem(const QJsonObject &obj) {
     m_sodium = getValue("sodium");
     m_potassium = getValue("potassium");
 
-    m_vitaminA = getValue("vitamin_a");
-    m_vitaminC = getValue("vitamin_c");
-    m_vitaminD = getValue("vitamin_d");
+    m_vitaminA = getValue("vitaminA");
+    m_vitaminC = getValue("vitaminC");
+    m_vitaminD = getValue("vitaminD");
 
     // Serving Sizes
-    QJsonArray servings = item.value("serving_sizes").toArray();
+    QJsonArray servings = obj.value("servings").toArray();
 
     for (QJsonValueRef ref : servings) {
         QJsonObject obj = ref.toObject();
 
-        double mult = obj.value("nutrition_multiplier").toDouble();
+        double mult = obj.value("mult").toDouble();
         QString unit = obj.value("unit").toString("g");
         double value = obj.value("value").toDouble();
 
@@ -200,23 +193,21 @@ QJsonObject FoodItem::toJson() const
 {
     QJsonObject obj{};
 
-    obj.insert("brand_name", m_brand);
-    obj.insert("description", m_name);
+    obj.insert("brand", m_brand);
+    obj.insert("name", m_name);
     obj.insert("id", m_id);
 
-    QJsonObject nutrition{};
-
-    auto setValue = [&nutrition](const QString &field, double value) mutable {
-        nutrition.insert(field, value);
+    auto setValue = [&obj](const QString &field, double value) mutable {
+        obj.insert(field, value);
     };
 
     setValue("fat", m_fat);
-    setValue("saturated_fat", m_satFat);
-    setValue("monounsaturated_fat", m_monoFat);
-    setValue("polyunsaturated_fat", m_polyFat);
-    setValue("trans_fat", m_transFat);
+    setValue("sat", m_satFat);
+    setValue("mono", m_monoFat);
+    setValue("poly", m_polyFat);
+    setValue("trans", m_transFat);
 
-    setValue("carbohydrates", m_carbs);
+    setValue("carbs", m_carbs);
     setValue("fiber", m_fiber);
     setValue("sugar", m_sugar);
     setValue("added_sugars", m_addedSugar);
@@ -229,11 +220,9 @@ QJsonObject FoodItem::toJson() const
     setValue("sodium", m_sodium);
     setValue("potassium", m_potassium);
 
-    setValue("vitamin_a", m_vitaminA);
-    setValue("vitamin_c", m_vitaminC);
-    setValue("vitamin_d", m_vitaminD);
-
-    obj.insert("nutritional_contents", nutrition);
+    setValue("vitaminA", m_vitaminA);
+    setValue("vitaminC", m_vitaminC);
+    setValue("vitaminD", m_vitaminD);
 
     // Serving Sizes
     QJsonArray servings{};
@@ -241,14 +230,14 @@ QJsonObject FoodItem::toJson() const
     for (const ServingSize &size : m_servingSizes) {
         QJsonObject serving{};
 
-        serving.insert("nutrition_multiplier", size.baseMultiplier());
+        serving.insert("mult", size.baseMultiplier());
         serving.insert("unit", size.baseUnit());
         serving.insert("value", size.defaultValue());
 
         servings.append(serving);
     }
 
-    obj.insert("serving_sizes", servings);
+    obj.insert("servings", servings);
 
     return obj;
 }

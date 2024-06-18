@@ -13,6 +13,7 @@ class OFPManager : public QObject
 
 private:
     QNetworkAccessManager *m_manager;
+
 public:
     explicit OFPManager(QObject *parent = nullptr);
 
