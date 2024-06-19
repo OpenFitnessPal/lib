@@ -58,7 +58,7 @@ export(TARGETS OFPLib
   FILE "${PROJECT_BINARY_DIR}/OFPLibTargets.cmake")
 
 configure_file(OFPLib.pc.in OFPLib.pc @ONLY)
-install(FILES ${CMAKE_BINARY_DIR}/OFPLib.pc DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
+# install(FILES ${CMAKE_BINARY_DIR}/OFPLib.pc DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
 
 export(PACKAGE OFPLib)
 
