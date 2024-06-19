@@ -22,6 +22,8 @@ elseif (FORCE_QT5)
     set(QT_VERSION_MAJOR 5)
 endif()
 
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Network)
 
 set(HEADERS
@@ -56,6 +58,7 @@ install(TARGETS OFPLib
 
 export(TARGETS OFPLib
   FILE "${PROJECT_BINARY_DIR}/OFPLibTargets.cmake")
+
 
 configure_file(OFPLib.pc.in OFPLib.pc @ONLY)
 # install(FILES ${CMAKE_BINARY_DIR}/OFPLib.pc DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
