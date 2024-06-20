@@ -27,11 +27,8 @@ void OFPManager::search(const QString &query) const
 
         QJsonParseError e;
         QJsonDocument doc = QJsonDocument::fromJson(data, &e);
-        qDebug() << e.errorString();
 
         QJsonArray array = doc.array();
-
-        qDebug() << doc;
 
         QList<FoodItem> items{};
 
