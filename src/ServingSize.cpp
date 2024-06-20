@@ -29,6 +29,28 @@ void ServingSize::setDefaultValue(double newDefaultValue)
     m_defaultValue = newDefaultValue;
 }
 
+ServingSize ServingSize::fromJson(const QJsonObject &obj)
+{
+    ServingSize s;
+
+    s.setBaseMultiplier(obj.value("mult").toDouble());
+    s.setDefaultValue(obj.value("value").toDouble());
+    s.setUnit(obj.value("unit").toString());
+
+    return s;
+}
+
+QJsonObject ServingSize::toJson() const
+{
+    QJsonObject obj{};
+
+    obj.insert("mult", m_baseMultiplier);
+    obj.insert("unit", baseUnit());
+    obj.insert("value", m_defaultValue);
+
+    return obj;
+}
+
 void ServingSize::setUnit(const QString &newUnit)
 {
     m_unit = newUnit;
@@ -44,3 +66,8 @@ ServingSize::ServingSize(double baseMultiplier, QString unit, double defaultValu
     m_unit(unit),
     m_defaultValue(defaultValue)
 {}
+
+bool operator==(const ServingSize &a, const ServingSize &b) {
+    return a.baseMultiplier() == b.baseMultiplier()
+    && a.unit() == b.unit();
+}

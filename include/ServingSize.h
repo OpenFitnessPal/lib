@@ -3,6 +3,8 @@
 
 #include <QString>
 
+#include <QJsonObject>
+
 class ServingSize
 {
 private:
@@ -25,6 +27,11 @@ public:
 
     double defaultValue() const;
     void setDefaultValue(double newDefaultValue);
+
+    static ServingSize fromJson(const QJsonObject &obj);
+    QJsonObject toJson() const;
 };
+
+bool operator==(const ServingSize &a, const ServingSize &b);
 
 #endif // SERVINGSIZE_H

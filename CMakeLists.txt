@@ -29,12 +29,14 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Network)
 set(HEADERS
     include/FoodItem.h
     include/ServingSize.h
-    include/OFPManager.h)
+    include/OFPManager.h
+include/NutrientUnion.h)
 
 add_library(OFPLib
   src/FoodItem.cpp
   src/ServingSize.cpp
   src/OFPManager.cpp
+  src/NutrientUnion.cpp
   ${HEADERS}
 )
 
