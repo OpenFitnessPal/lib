@@ -17,6 +17,7 @@ private:
     NutrientUnion m_nutrients;
 
     QList<ServingSize> m_servingSizes{};
+    ServingSize m_defaultServing;
 public:
     /**
      * @brief FoodItem Construct a food-item from a search JSON.
@@ -43,6 +44,8 @@ public:
     NutrientUnion nutrients() const;
 
     QList<ServingSize> servingSizes() const;
+    ServingSize defaultServing() const;
+    int defaultServingIdx() const;
     QString id() const;
 };
 

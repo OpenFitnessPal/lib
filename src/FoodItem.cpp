@@ -40,6 +40,16 @@ QList<ServingSize> FoodItem::servingSizes() const
     return m_servingSizes;
 }
 
+ServingSize FoodItem::defaultServing() const
+{
+    return m_defaultServing;
+}
+
+int FoodItem::defaultServingIdx() const
+{
+    return m_servingSizes.indexOf(m_defaultServing);
+}
+
 QString FoodItem::id() const
 {
     return m_id;
@@ -51,8 +61,8 @@ bool operator==(const FoodItem &a, const FoodItem &b)
 }
 
 FoodItem::FoodItem(const QJsonObject &obj) {
-    m_brand = obj.value("brand").toString("Unknown");
-    m_name = obj.value("name").toString("Unknown Food");
+    m_brand = obj.value("brand").toString("Generic");
+    m_name = obj.value("name").toString("Unknown");
 
     m_id = obj.value("id").toVariant().toString();
 
@@ -90,6 +100,8 @@ FoodItem::FoodItem(const QJsonObject &obj) {
     // Serving Sizes
     QJsonArray servings = obj.value("servings").toArray();
 
+    QList<double> multipliers;
+
     for (QJsonValueRef ref : servings) {
         QJsonObject obj = ref.toObject();
 
@@ -97,10 +109,28 @@ FoodItem::FoodItem(const QJsonObject &obj) {
         QString unit = obj.value("unit").toString("g");
         double value = obj.value("value").toDouble();
 
+        multipliers.append(mult);
+
         ServingSize size(mult, unit, value);
 
         m_servingSizes.append(size);
     }
+
+    int idx = 0;
+    if (multipliers.contains(1.0)) idx = multipliers.indexOf(1.0);
+    else {
+        double nearest = std::numeric_limits<double>::lowest();
+        int i = 0;
+        for (const double mult : multipliers) {
+            if (std::abs(mult - 1.0) < std::abs(nearest - 1.0)) {
+                nearest = mult;
+                idx = i;
+            }
+
+            ++i;
+        }
+    }
+    m_defaultServing = m_servingSizes.at(idx);
 }
 
 QJsonObject FoodItem::toJson() const

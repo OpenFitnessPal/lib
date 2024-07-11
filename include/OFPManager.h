@@ -22,6 +22,7 @@ public slots:
 
 signals:
     void searchComplete(const QList<FoodItem> results) const;
+    void cancelAll() const;
 };
 
 #endif // OFPMANAGER_H

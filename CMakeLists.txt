@@ -2,9 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 
 project(OFPLib LANGUAGES CXX VERSION 0.0.1 DESCRIPTION "A library to access data from MyFitnessPal's extensive nutrition database without an account.")
 
-set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

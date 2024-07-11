@@ -21,8 +21,9 @@ void OFPManager::search(const QString &query) const
     req.setUrl(QUrl(BASE_URL + newQuery));
 
     QNetworkReply *reply = m_manager->get(req);
-    QObject::connect(reply, &QNetworkReply::readyRead, this, [reply, this] {
+    connect(reply, &QNetworkReply::readyRead, this, [reply, this] {
         QByteArray data = reply->readAll();
+
         data.removeLast();
 
         QJsonParseError e;
@@ -41,7 +42,9 @@ void OFPManager::search(const QString &query) const
         emit searchComplete(items);
     });
 
-    QObject::connect(reply, &QNetworkReply::errorOccurred, this, [reply, this](QNetworkReply::NetworkError e) {
+    connect(reply, &QNetworkReply::errorOccurred, this, [reply, this](QNetworkReply::NetworkError e) {
         qDebug() << e;
     });
+
+    connect(this, &OFPManager::cancelAll, reply, &QNetworkReply::abort);
 }
