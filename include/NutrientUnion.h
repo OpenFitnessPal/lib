@@ -2,8 +2,36 @@
 #define NUTRIENTUNION_H
 
 #include <QString>
+#include <QObject>
+
 typedef struct NutrientUnion
 {
+    Q_GADGET
+
+    Q_PROPERTY(double fat MEMBER fat)
+    Q_PROPERTY(double satFat MEMBER satFat)
+    Q_PROPERTY(double monoFat MEMBER monoFat)
+    Q_PROPERTY(double polyFat MEMBER polyFat)
+    Q_PROPERTY(double transFat MEMBER transFat)
+
+    Q_PROPERTY(double carbs MEMBER carbs)
+    Q_PROPERTY(double fiber MEMBER fiber)
+    Q_PROPERTY(double sugar MEMBER sugar)
+    Q_PROPERTY(double addedSugar MEMBER addedSugar)
+
+    Q_PROPERTY(double protein MEMBER protein)
+    Q_PROPERTY(double cholesterol MEMBER cholesterol)
+    Q_PROPERTY(double calcium MEMBER calcium)
+    Q_PROPERTY(double iron MEMBER iron)
+    Q_PROPERTY(double sodium MEMBER sodium)
+    Q_PROPERTY(double potassium MEMBER potassium)
+    Q_PROPERTY(double vitaminA MEMBER vitaminA)
+    Q_PROPERTY(double vitaminC MEMBER vitaminC)
+    Q_PROPERTY(double vitaminD MEMBER vitaminD)
+
+    Q_PROPERTY(double calories READ calories)
+
+public:
     double fat = 0;
     double satFat = 0;
     double monoFat = 0;
@@ -35,5 +63,7 @@ typedef struct NutrientUnion
 
 NutrientUnion operator+(const NutrientUnion &a, const NutrientUnion &b);
 NutrientUnion operator*(const NutrientUnion &n, const double &multiplier);
+
+Q_DECLARE_METATYPE(NutrientUnion)
 
 #endif // NUTRIENTUNION_H

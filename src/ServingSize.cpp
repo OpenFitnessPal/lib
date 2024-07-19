@@ -56,6 +56,11 @@ void ServingSize::setUnit(const QString &newUnit)
     m_unit = newUnit;
 }
 
+QString ServingSize::unit(double units) const
+{
+    return QString::number(units * m_defaultValue) + " " + m_unit;
+}
+
 void ServingSize::setBaseMultiplier(double newBaseMultiplier)
 {
     m_baseMultiplier = newBaseMultiplier;
@@ -71,3 +76,9 @@ bool operator==(const ServingSize &a, const ServingSize &b) {
     return a.baseMultiplier() == b.baseMultiplier()
     && a.unit() == b.unit();
 }
+
+bool operator!=(const ServingSize &a, const ServingSize &b) {
+    return a.baseMultiplier() != b.baseMultiplier()
+           || a.unit() != b.unit();
+}
+

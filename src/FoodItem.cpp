@@ -60,6 +60,36 @@ bool operator==(const FoodItem &a, const FoodItem &b)
     return a.id() == b.id();
 }
 
+bool operator!=(const FoodItem &a, const FoodItem &b) {
+    return a.id() != b.id();
+}
+
+void FoodItem::setName(const QString &newName)
+{
+    if (m_name == newName)
+        return;
+    m_name = newName;
+}
+
+void FoodItem::setBrand(const QString &newBrand)
+{
+    if (m_brand == newBrand)
+        return;
+    m_brand = newBrand;
+}
+
+void FoodItem::setId(const QString &newId)
+{
+    if (m_id == newId)
+        return;
+    m_id = newId;
+}
+
+void FoodItem::setNutrients(const NutrientUnion &newNutrients)
+{
+    m_nutrients = newNutrients;
+}
+
 FoodItem::FoodItem(const QJsonObject &obj) {
     m_brand = obj.value("brand").toString("Generic");
     m_name = obj.value("name").toString("Unknown");
@@ -186,78 +216,6 @@ QJsonObject FoodItem::toJson() const
     return obj;
 }
 
-// FoodItem::FoodItem(const QString &html) {
-//     QString split = html.split("<script id=\"__NEXT_DATA__\" type=\"application/json\">").at(1).split("</script>").at(0);
-
-//     QJsonDocument doc = QJsonDocument::fromJson(split.toUtf8());
-
-//     // behind like 30 layers you can actually find the original json in the html
-//     QJsonObject dehydratedState = doc.object().value("props").toObject().value("pageProps").toObject().value("dehydratedState").toObject();
-//     QJsonObject query = dehydratedState.value("queries").toArray().at(0).toObject();
-
-//     QJsonObject foodData = query.value("state").toObject().value("data").toObject().value("data").toObject().value("foodByObfuscatedId").toObject();
-//     QJsonArray queryKey = query.value("queryKey").toArray();
-
-//     m_brand = foodData.value("brand").toString("Unknown");
-//     m_name = foodData.value("description").toString("Unknown Food");
-
-//     m_id = dehydratedState.value("foodID").toVariant().toString();
-
-//     QList<ServingSize> sizes;
-
-//     QJsonArray servings = foodData.value("servingSizes").toArray();
-
-//     double defaultCalories = std::nan(0);
-
-//     for (QJsonValueRef ref : servings) {
-//         QJsonObject obj = ref.toObject();
-
-//         double value = obj.value("value").toDouble();
-//         QString unit = obj.value("unit").toString("serving");
-//         double base = 1.0;
-
-//         QJsonObject nutrition = obj.value("nutrition").toObject();
-//         double cals = nutrition.value("energy").toObject().value("value").toDouble();
-//         if (std::isnan(defaultCalories)) {
-//             defaultCalories = cals;
-
-//             auto getValue = [nutrition](const QString &field) -> double {
-//                 return nutrition.value(field).toDouble();
-//             };
-
-//             m_fat = getValue("fat");
-//             m_satFat = getValue("saturatedFat");
-//             m_monoFat = getValue("monounsaturatedFat");
-//             m_polyFat = getValue("polyunsaturatedFat");
-//             m_transFat = getValue("transFat");
-
-//             m_carbs = getValue("carbs");
-//             m_fiber = getValue("fiber");
-//             m_sugar = getValue("sugar");
-//             m_addedSugar = 0.0;
-
-//             m_protein = getValue("protein");
-//             m_cholesterol = getValue("cholesterol");
-
-//             m_calcium = getValue("calcium");
-//             m_iron = getValue("iron");
-//             m_sodium = getValue("sodium");
-//             m_potassium = getValue("potassium");
-
-//             m_vitaminA = getValue("vitaminA");
-//             m_vitaminC = getValue("vitaminC");
-//             m_vitaminD = getValue("vitaminD");
-//         } else {
-//             base = cals / defaultCalories;
-//         }
-
-//         ServingSize size(base, unit, value);
-//         sizes.append(size);
-//     }
-
-//     m_servingSizes = sizes;
-// }
-
 bool operator==(const FoodServing &a, const FoodServing &b) {
     return a.item == b.item
            && a.size == b.size
@@ -277,13 +235,9 @@ QJsonObject FoodServing::toJson() const
 
 FoodServing FoodServing::fromJson(const QJsonObject &obj)
 {
-    FoodServing food;
-
     FoodItem item = FoodItem(obj.value("item").toObject());
     ServingSize size = ServingSize::fromJson(obj.value("size").toObject());
     double units = obj.value("units").toDouble();
 
-    food = FoodServing{item, size, units};
-
-    return food;
+    return FoodServing{item, size, units};
 }
