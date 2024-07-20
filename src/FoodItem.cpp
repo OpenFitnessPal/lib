@@ -222,6 +222,42 @@ bool operator==(const FoodServing &a, const FoodServing &b) {
            && a.units == b.units;
 }
 
+double FoodServing::getUnits() const
+{
+    return units;
+}
+
+void FoodServing::setUnits(double newUnits)
+{
+    if (qFuzzyCompare(units, newUnits))
+        return;
+    units = newUnits;
+}
+
+ServingSize FoodServing::getSize() const
+{
+    return size;
+}
+
+void FoodServing::setSize(const ServingSize &newSize)
+{
+    if (size == newSize)
+        return;
+    size = newSize;
+}
+
+FoodItem FoodServing::getItem() const
+{
+    return item;
+}
+
+void FoodServing::setItem(const FoodItem &newItem)
+{
+    if (item == newItem)
+        return;
+    item = newItem;
+}
+
 QJsonObject FoodServing::toJson() const
 {
     QJsonObject obj;

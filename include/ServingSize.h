@@ -45,5 +45,6 @@ bool operator==(const ServingSize &a, const ServingSize &b);
 bool operator!=(const ServingSize &a, const ServingSize &b);
 
 Q_DECLARE_METATYPE(ServingSize);
+Q_DECLARE_METATYPE(QList<ServingSize>);
 
 #endif // SERVINGSIZE_H
