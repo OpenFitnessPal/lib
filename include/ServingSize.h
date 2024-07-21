@@ -28,11 +28,11 @@ public:
     double baseMultiplier() const;
     void setBaseMultiplier(double newBaseMultiplier);
 
-    QString unit() const;
+    // QString unit() const;
     QString baseUnit() const;
     void setUnit(const QString &newUnit);
 
-    Q_INVOKABLE QString unit(double units) const;
+    Q_INVOKABLE QString unit(double units = 1) const;
 
     double defaultValue() const;
     void setDefaultValue(double newDefaultValue);

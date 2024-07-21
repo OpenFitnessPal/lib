@@ -5,11 +5,6 @@ double ServingSize::baseMultiplier() const
     return m_baseMultiplier;
 }
 
-QString ServingSize::unit() const
-{
-    return QString::number(m_defaultValue) + " " + m_unit;
-}
-
 QString ServingSize::baseUnit() const
 {
     return m_unit;
