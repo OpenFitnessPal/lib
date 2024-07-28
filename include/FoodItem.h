@@ -85,6 +85,8 @@ public:
 
     FoodItem getItem() const;
     void setItem(const FoodItem &newItem);
+
+    NutrientUnion nutrients() const;
 } FoodServing;
 
 bool operator==(const FoodServing &a, const FoodServing &b);

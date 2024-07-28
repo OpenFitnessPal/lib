@@ -258,6 +258,13 @@ void FoodServing::setItem(const FoodItem &newItem)
     item = newItem;
 }
 
+NutrientUnion FoodServing::nutrients() const
+{
+    double mult = size.baseMultiplier() * units;
+
+    return item.nutrients() * mult;
+}
+
 QJsonObject FoodServing::toJson() const
 {
     QJsonObject obj;
