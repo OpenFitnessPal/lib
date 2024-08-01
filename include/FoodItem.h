@@ -15,6 +15,7 @@ class FoodItem
     Q_PROPERTY(QString id READ id WRITE setId FINAL)
     Q_PROPERTY(NutrientUnion nutrients READ nutrients WRITE setNutrients FINAL)
     Q_PROPERTY(QList<ServingSize> servingSizes READ servingSizes FINAL)
+    Q_PROPERTY(bool isRecipe READ isRecipe WRITE setIsRecipe FINAL)
 private:
     QString m_brand;
     QString m_name;
@@ -25,6 +26,8 @@ private:
 
     QList<ServingSize> m_servingSizes{};
     ServingSize m_defaultServing;
+
+    bool m_isRecipe;
 
 public:
     /**
@@ -52,9 +55,13 @@ public:
     QList<ServingSize> servingSizes() const;
     ServingSize defaultServing() const;
     int defaultServingIdx() const;
+    void addServingSize(const ServingSize &size);
 
     QString id() const;
     void setId(const QString &newId);
+
+    bool isRecipe() const;
+    void setIsRecipe(bool newIsRecipe);
 };
 
 bool operator==(const FoodItem &a, const FoodItem &b);
@@ -65,27 +72,20 @@ Q_DECLARE_METATYPE(FoodItem);
 typedef struct FoodServing {
     Q_GADGET
 
-    Q_PROPERTY(double units READ getUnits WRITE setUnits FINAL)
-    Q_PROPERTY(ServingSize size READ getSize WRITE setSize FINAL)
-    Q_PROPERTY(FoodItem item READ getItem WRITE setItem FINAL)
+    Q_PROPERTY(double units MEMBER units FINAL)
+    Q_PROPERTY(int sizeIdx MEMBER sizeIdx FINAL)
+    Q_PROPERTY(ServingSize size READ size FINAL)
+    Q_PROPERTY(FoodItem item MEMBER item FINAL)
 
 public:
     FoodItem item;
-    ServingSize size;
+    int sizeIdx;
     double units;
+
+    ServingSize size() const;
 
     QJsonObject toJson() const;
     static struct FoodServing fromJson(const QJsonObject &obj);
-
-    double getUnits() const;
-    void setUnits(double newUnits);
-
-    ServingSize getSize() const;
-    void setSize(const ServingSize &newSize);
-
-    FoodItem getItem() const;
-    void setItem(const FoodItem &newItem);
-
     NutrientUnion nutrients() const;
 } FoodServing;
 

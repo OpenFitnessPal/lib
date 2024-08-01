@@ -22,6 +22,7 @@ private:
     double m_defaultValue;
 public:
     ServingSize(double baseMultiplier = 0, QString unit = "", double defaultValue = 0);
+    ServingSize(const ServingSize &other);
 
     Q_INVOKABLE double multiplier(double units) const;
 

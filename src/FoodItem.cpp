@@ -50,6 +50,11 @@ int FoodItem::defaultServingIdx() const
     return m_servingSizes.indexOf(m_defaultServing);
 }
 
+void FoodItem::addServingSize(const ServingSize &size)
+{
+    m_servingSizes.append(size);
+}
+
 QString FoodItem::id() const
 {
     return m_id;
@@ -218,51 +223,20 @@ QJsonObject FoodItem::toJson() const
 
 bool operator==(const FoodServing &a, const FoodServing &b) {
     return a.item == b.item
-           && a.size == b.size
+           && a.sizeIdx == b.sizeIdx
            && a.units == b.units;
-}
-
-double FoodServing::getUnits() const
-{
-    return units;
-}
-
-void FoodServing::setUnits(double newUnits)
-{
-    if (qFuzzyCompare(units, newUnits))
-        return;
-    units = newUnits;
-}
-
-ServingSize FoodServing::getSize() const
-{
-    return size;
-}
-
-void FoodServing::setSize(const ServingSize &newSize)
-{
-    if (size == newSize)
-        return;
-    size = newSize;
-}
-
-FoodItem FoodServing::getItem() const
-{
-    return item;
-}
-
-void FoodServing::setItem(const FoodItem &newItem)
-{
-    if (item == newItem)
-        return;
-    item = newItem;
 }
 
 NutrientUnion FoodServing::nutrients() const
 {
-    double mult = size.baseMultiplier() * units;
+    double mult = size().baseMultiplier() * units;
 
     return item.nutrients() * mult;
+}
+
+ServingSize FoodServing::size() const
+{
+    return item.servingSizes().at(sizeIdx);
 }
 
 QJsonObject FoodServing::toJson() const
@@ -270,7 +244,7 @@ QJsonObject FoodServing::toJson() const
     QJsonObject obj;
 
     obj.insert("item", item.toJson());
-    obj.insert("size", size.toJson());
+    obj.insert("size", size().toJson());
     obj.insert("units", units);
 
     return obj;
@@ -280,7 +254,18 @@ FoodServing FoodServing::fromJson(const QJsonObject &obj)
 {
     FoodItem item = FoodItem(obj.value("item").toObject());
     ServingSize size = ServingSize::fromJson(obj.value("size").toObject());
+    int sizeIdx = item.servingSizes().indexOf(size);
     double units = obj.value("units").toDouble();
 
-    return FoodServing{item, size, units};
+    return FoodServing{item, sizeIdx, units};
+}
+
+bool FoodItem::isRecipe() const
+{
+    return m_isRecipe;
+}
+
+void FoodItem::setIsRecipe(bool newIsRecipe)
+{
+    m_isRecipe = newIsRecipe;
 }

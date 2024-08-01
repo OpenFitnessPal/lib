@@ -67,9 +67,14 @@ ServingSize::ServingSize(double baseMultiplier, QString unit, double defaultValu
     m_defaultValue(defaultValue)
 {}
 
+ServingSize::ServingSize(const ServingSize &other) :
+    m_baseMultiplier(other.baseMultiplier()),
+    m_unit(other.baseUnit()),
+    m_defaultValue(other.defaultValue())
+{}
+
 bool operator==(const ServingSize &a, const ServingSize &b) {
-    return a.baseMultiplier() == b.baseMultiplier()
-    && a.unit() == b.unit();
+    return a.unit() == b.unit();
 }
 
 bool operator!=(const ServingSize &a, const ServingSize &b) {
