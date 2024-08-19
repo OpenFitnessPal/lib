@@ -12,13 +12,39 @@ OFPManager::OFPManager(QObject *parent)
     , m_manager(new QNetworkAccessManager(this))
 {}
 
-void OFPManager::search(const QString &query) const
+void OFPManager::search(const QString &query, const SearchOptions &options) const
 {
     QString newQuery = query;
     newQuery.replace(' ', '+');
 
     QNetworkRequest req;
-    req.setUrl(QUrl(BASE_URL + newQuery));
+    QString url(BASE_URL + newQuery + "?");
+
+    bool first = true;
+    if (options.generics) {
+        first = false;
+        url += "generics";
+    }
+
+    if (options.results != 0) {
+        url += (first ? "" : "&");
+        url += "results=" + QString::number(options.results);
+        first = false;
+    }
+
+    if (!options.avoid.empty()) {
+        QMapIterator iter(options.avoid);
+
+        while (iter.hasNext()) {
+            iter.next();
+            url += (first ? "" : "&");
+            url += iter.key() + "=" + QString::number(iter.value());
+            first = false;
+        }
+    }
+
+    qDebug() << url;
+    req.setUrl(QUrl(url));
 
     QNetworkReply *reply = m_manager->get(req);
     connect(reply, &QNetworkReply::readyRead, this, [reply, this] {

@@ -7,6 +7,12 @@
 
 #include "FoodItem.h"
 
+typedef struct SearchOptions {
+    QMap<QString, double> avoid{};
+    int results = 0;
+    bool generics = false;
+} SearchOptions;
+
 class OFPManager : public QObject
 {
     Q_OBJECT
@@ -18,7 +24,7 @@ public:
     explicit OFPManager(QObject *parent = nullptr);
 
 public slots:
-    void search(const QString &query) const;
+    void search(const QString &query, const SearchOptions &options = SearchOptions{}) const;
 
 signals:
     void searchComplete(const QList<FoodItem> results) const;
