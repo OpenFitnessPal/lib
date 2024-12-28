@@ -13,8 +13,6 @@ find_package(Qt6 REQUIRED COMPONENTS Core Network)
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Network)
-
 set(HEADERS
     include/FoodItem.h
     include/ServingSize.h
