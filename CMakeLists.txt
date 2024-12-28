@@ -9,16 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(BUILD_SHARED_LIBS ON)
 
-option(FORCE_QT6 OFF "Forcefully link to Qt 6")
-option(FORCE_QT5 OFF "Forcefully link to Qt 5")
-
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Network)
-
-if (FORCE_QT6)
-    set(QT_VERSION_MAJOR 6)
-elseif (FORCE_QT5)
-    set(QT_VERSION_MAJOR 5)
-endif()
+find_package(Qt6 REQUIRED COMPONENTS Core Network)
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
