@@ -1,3 +1,6 @@
+# DEPRECATED
+This library is deprecated. OpenFitnessPal now contains the library directly.
+
 # OFPLib
 
 OFPLib ("OpenFitnessPal Library") is a library designed to access data from MyFitnessPal's extensive nutrition database through public webpages and APIs, allowing unlimited access to this valuable resource for all application developers.
