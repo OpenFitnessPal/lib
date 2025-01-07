@@ -2,6 +2,7 @@
 #define FOODITEM_H
 
 #include <QJsonObject>
+#include <QQmlEngine>
 
 #include "NutrientUnion.h"
 #include "ServingSize.h"
@@ -16,6 +17,8 @@ class FoodItem
     Q_PROPERTY(NutrientUnion nutrients READ nutrients WRITE setNutrients FINAL)
     Q_PROPERTY(QList<ServingSize> servingSizes READ servingSizes FINAL)
     Q_PROPERTY(bool isRecipe READ isRecipe WRITE setIsRecipe FINAL)
+
+    QML_VALUE_TYPE(foodItem)
 private:
     QString m_brand;
     QString m_name;
@@ -76,6 +79,8 @@ typedef struct FoodServing {
     Q_PROPERTY(int sizeIdx MEMBER sizeIdx FINAL)
     Q_PROPERTY(ServingSize size READ size FINAL)
     Q_PROPERTY(FoodItem item MEMBER item FINAL)
+
+    QML_VALUE_TYPE(food)
 
 public:
     FoodItem item;

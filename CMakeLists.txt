@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(BUILD_SHARED_LIBS ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Network)
+find_package(Qt6 REQUIRED COMPONENTS Core Network Quick)
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
@@ -17,17 +17,26 @@ set(HEADERS
     include/FoodItem.h
     include/ServingSize.h
     include/OFPManager.h
-include/NutrientUnion.h)
-
-add_library(OFPLib
-  src/FoodItem.cpp
-  src/ServingSize.cpp
-  src/OFPManager.cpp
-  src/NutrientUnion.cpp
-  ${HEADERS}
+    include/NutrientUnion.h
+    include/ExerciseRoutine.h
+    include/Exercise.h
+    include/ExerciseSet.h
+    include/Recipe.h
 )
 
-target_link_libraries(OFPLib Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Network)
+add_library(OFPLib
+    src/FoodItem.cpp
+    src/ExerciseRoutine.cpp
+    src/Exercise.cpp
+    src/ExerciseSet.cpp
+    src/Recipe.cpp
+    src/ServingSize.cpp
+    src/OFPManager.cpp
+    src/NutrientUnion.cpp
+    ${HEADERS}
+)
+
+target_link_libraries(OFPLib Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Network Qt${QT_VERSION_MAJOR}::Quick)
 
 target_include_directories(OFPLib PRIVATE "include")
 
@@ -46,7 +55,7 @@ install(TARGETS OFPLib
 )
 
 export(TARGETS OFPLib
-  FILE "${PROJECT_BINARY_DIR}/OFPLibTargets.cmake")
+    FILE "${PROJECT_BINARY_DIR}/OFPLibTargets.cmake")
 
 
 configure_file(OFPLib.pc.in OFPLib.pc @ONLY)
@@ -55,13 +64,13 @@ configure_file(OFPLib.pc.in OFPLib.pc @ONLY)
 export(PACKAGE OFPLib)
 
 configure_file(OFPLibConfig.cmake.in
-  "${PROJECT_BINARY_DIR}/OFPLibConfig.cmake" @ONLY)
+    "${PROJECT_BINARY_DIR}/OFPLibConfig.cmake" @ONLY)
 
 export(TARGETS
-        OFPLib
+    OFPLib
     NAMESPACE OFPLib::
     FILE "${CMAKE_CURRENT_BINARY_DIR}/OFPLibConfig.cmake"
 )
 
 install(EXPORT OFPLibConfig DESTINATION
-  "${CMAKE_INSTALL_DATADIR}/OFPLib/cmake" COMPONENT dev)
+    "${CMAKE_INSTALL_DATADIR}/OFPLib/cmake" COMPONENT dev)
